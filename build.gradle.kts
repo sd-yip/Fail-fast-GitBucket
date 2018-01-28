@@ -44,66 +44,57 @@ tasks {
     dependsOn("compileJava")
 
     doLast {
-      val jarName = "gitbucket_2.12-4.21.2.jar"
-
       fileSystem("jar:" + File("gitbucket.war").toURI()).use {
-        val jar = it.getPath("/WEB-INF/lib/$jarName")
-        val tempJar = File(jarName).absoluteFile.toPath()
-        Files.copy(jar, tempJar, StandardCopyOption.REPLACE_EXISTING)
+        val cls = ClassNode()
+        val jettyLauncher = it.getPath("JettyLauncher.class")
 
-        fileSystem("jar:" + File(jarName).toURI()).use {
-          val cls = ClassNode()
-          val jettyLauncher = it.getPath("JettyLauncher.class")
-
-          Files.newInputStream(jettyLauncher).use {
-            ClassReader(it).accept(cls, 0)
-          }
-          cls
-              .methods
-              .map { it as MethodNode }
-              .filter {
-                it.name == "main" && it.desc == "([Ljava/lang/String;)V"
-              }
-              .forEach {
-                val instructions = it.instructions
-
-                instructions
-                    .toArray()
-                    .filterIsInstance(MethodInsnNode::class.java)
-                    .filter {
-                      it.opcode == Opcodes.INVOKEVIRTUAL
-                          && it.owner == "org/eclipse/jetty/server/Server"
-                          && it.name == "start"
-                          && it.desc == "()V"
-                    }
-                    .forEach {
-                      instructions.insertBefore(it, MethodInsnNode(
-                          Opcodes.INVOKESTATIC,
-                          "JettyServers_2imxUOOdfRpt",
-                          "startOrExitJvm",
-                          "(Lorg/eclipse/jetty/server/Server;)V",
-                          false
-                      ))
-                      instructions.remove(it)
-                    }
-              }
-
-          val writer = ClassWriter(0)
-          cls.accept(writer)
-
-          Files.write(jettyLauncher, writer.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
-          val jettyServersName = "JettyServers_2imxUOOdfRpt.class"
-          val jettyServers = File("build")
-              .resolve("classes")
-              .resolve("java")
-              .resolve("main")
-              .resolve(jettyServersName)
-              .absoluteFile
-              .toPath()
-
-          Files.copy(jettyServers, it.getPath(jettyServersName))
+        Files.newInputStream(jettyLauncher).use {
+          ClassReader(it).accept(cls, 0)
         }
-        Files.copy(tempJar, jar, StandardCopyOption.REPLACE_EXISTING)
+        cls
+            .methods
+            .map { it as MethodNode }
+            .filter {
+              it.name == "main" && it.desc == "([Ljava/lang/String;)V"
+            }
+            .forEach {
+              val instructions = it.instructions
+
+              instructions
+                  .toArray()
+                  .filterIsInstance(MethodInsnNode::class.java)
+                  .filter {
+                    it.opcode == Opcodes.INVOKEVIRTUAL
+                        && it.owner == "org/eclipse/jetty/server/Server"
+                        && it.name == "start"
+                        && it.desc == "()V"
+                  }
+                  .forEach {
+                    instructions.insertBefore(it, MethodInsnNode(
+                        Opcodes.INVOKESTATIC,
+                        "JettyServers_2imxUOOdfRpt",
+                        "startOrExitJvm",
+                        "(Lorg/eclipse/jetty/server/Server;)V",
+                        false
+                    ))
+                    instructions.remove(it)
+                  }
+            }
+
+        val writer = ClassWriter(0)
+        cls.accept(writer)
+
+        Files.write(jettyLauncher, writer.toByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
+        val jettyServersName = "JettyServers_2imxUOOdfRpt.class"
+        val jettyServers = File("build")
+            .resolve("classes")
+            .resolve("java")
+            .resolve("main")
+            .resolve(jettyServersName)
+            .absoluteFile
+            .toPath()
+
+        Files.copy(jettyServers, it.getPath(jettyServersName))
       }
     }
   }
