@@ -3,3 +3,5 @@
 /*.iml
 /build
 /gitbucket.war
+/gitbucket_*-*.jar
+/JettyLauncher.class
