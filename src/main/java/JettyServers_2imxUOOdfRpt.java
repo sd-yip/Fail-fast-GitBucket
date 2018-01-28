@@ -7,7 +7,13 @@ public class JettyServers_2imxUOOdfRpt {
     }
     catch (Exception e) {
       e.printStackTrace();
-      System.exit(132);
+
+      try {
+        server.stop();
+      }
+      catch (Exception e1) {
+        e1.printStackTrace();
+      }
     }
   }
 }
