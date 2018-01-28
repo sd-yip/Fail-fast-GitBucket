@@ -26,7 +26,6 @@ repositories {
 }
 dependencies {
   compileOnly("org.eclipse.jetty:jetty-webapp:9.4.7.v20170914")
-  compileOnly("org.slf4j:slf4j-api:1.7.25")
 }
 
 fun fileSystem(uri: String) = fileSystem(URI.create(uri))
