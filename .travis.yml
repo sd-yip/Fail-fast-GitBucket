@@ -4,8 +4,18 @@ jdk: oraclejdk8
 
 cache:
   directories:
-    - $HOME/.gradle
+    - "$HOME/.gradle"
 
-install: ./gradlew compileJava
+install: "./gradlew compileJava"
 
-script: ./gradlew download patch
+script: "./gradlew download patch"
+
+deploy:
+  provider: releases
+  api_key:
+    secure:
+      paKBMFGXervmCBQ1thJSk6s52QKbdqxRTw25buLWxJfpW7+/XkfCWtuKHUPKHRPpiG2Z2MnCEGVnVq2xwhEo7N4GWW4CY+rr16I6mV5CW2juhF0NCUhIjOQPgtm1q3Tl8/Ux3GfL/x780Yewgso7YimhPx6fJI0wHACK3nP7/OujxWJcES4TKCtBnhawKA1CMm96+gHezAQdkR281FWZWSDsMCKl+9J8/uA23rhRguZG8SRcQW28S3YAq+lcCkvfcljmqeTrwqnmlMHuVJfItC4xxzw+HusKrqqjrkjxfxs21SwLWp3d7ReO94Uy1IGGRPgYJgWBid5H6kZSoZdeK6fNTKm2oLSrnSTHunf4LjPqBkgQIXOZDvC1Ip9jWjeqHvvNoOQ8y3yNzevqXmzE1P+dt4kZivpb1V3l8MtQBBtgbZKYMqcS9NRRpsKRZJyVI8hBRvyytyn6Nia9XTZ7OTai6CZT5v3culS02EpNiI+yvJ0RhDPry6WudHfc5UbW6/UVT/KI/tI1mmF3iePaYjjyuPKsvYK1f/bMSe4wPH8hJjetAEVe5vaaMAxHqJwKRIW6zCrurbUei9aXt9NPIZjkj/Dl9WuNE37QNDzRtnfndJ92N0+FW2rl+UomLnrbK/Sw42lC5eYWXfVljj48QanwW1Zoa08qsKFjEs9UdGs=
+  file: gitbucket.war
+  skip_cleanup: true
+  on:
+    tags: true
