@@ -6,6 +6,7 @@ public class JettyServers_2imxUOOdfRpt {
       server.start();
     }
     catch (Exception e) {
+      System.err.println("Error encountered during server start");
       e.printStackTrace();
 
       try {
