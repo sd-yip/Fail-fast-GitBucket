@@ -4,17 +4,12 @@ public class JettyServers_2imxUOOdfRpt {
   public static void startOrExitJvm(Server server) {
     try {
       server.start();
+      System.out.println("Server started successfully");
     }
-    catch (Exception e) {
+    catch (Throwable t) {
       System.err.println("Error encountered during server start");
-      e.printStackTrace();
-
-      try {
-        server.stop();
-      }
-      catch (Exception e1) {
-        e1.printStackTrace();
-      }
+      t.printStackTrace();
+      System.exit(132);
     }
   }
 }
