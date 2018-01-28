@@ -6,6 +6,6 @@ cache:
   directories:
     - $HOME/.gradle
 
-install: gradle compileJava
+install: ./gradlew compileJava
 
-script: gradle download patch
+script: ./gradlew download patch
